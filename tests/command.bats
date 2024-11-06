@@ -89,7 +89,8 @@ setup() {
 	export BUILDKITE_PLUGIN_DOCKER_COMPOSE_PULL_RETRIES=1
 
   stub docker \
-    "pull image:tag"
+    "pull image:tag : exit 2"
+    "pull image:tag : echo pulled success on retry"
 
   run "$PWD"/hooks/command
 
