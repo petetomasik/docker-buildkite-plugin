@@ -68,7 +68,7 @@ setup() {
 
 @test "Pull image first before running BUILDKITE_COMMAND, success on retry" {
   export BUILDKITE_PLUGIN_DOCKER_ALWAYS_PULL=true
-	export BUILDKITE_PLUGIN_DOCKER_PULL_RETRIES=1
+	export BUILDKITE_PLUGIN_DOCKER_PULL_RETRIES=2
 
   stub docker \
     "pull image:tag" \
