@@ -351,7 +351,7 @@ if [[ "${BUILDKITE_PLUGIN_DOCKER_ALWAYS_PULL:-false}" =~ ^(true|on|1)$ ]] ; then
   if ! retry "${BUILDKITE_PLUGIN_DOCKER_PULL_RETRIES:-3}" \
        docker pull "${image}" ; then
     retry_exit_status="$?"
-    echo "!!! :docker: Pull failed."
+    echo -e "!!! :docker: Pull failed: retry_exit_status=$retry_exit_status"
     exit "$retry_exit_status"
   fi
 fi
