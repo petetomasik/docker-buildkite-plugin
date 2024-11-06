@@ -66,7 +66,7 @@ setup() {
   unstub docker
 }
 
-@test "Pull image first before running BUILDKITE_COMMAND, success on retry" {
+@test "Pull image first before running BUILDKITE_COMMAND, success on retries" {
   export BUILDKITE_PLUGIN_DOCKER_ALWAYS_PULL=true
 	export BUILDKITE_PLUGIN_DOCKER_PULL_RETRIES=2
 
@@ -85,21 +85,24 @@ setup() {
   unstub docker
 }
 
-#@test "Pull image first before running BUILDKITE_COMMAND, failure with retries" {
-#  export BUILDKITE_PLUGIN_DOCKER_ALWAYS_PULL=true
-#  export BUILDKITE_PLUGIN_DOCKER_PULL_RETRIES=1
-#
-#  stub docker \
-#    "pull image:tag : exit 2"
-#    "pull image:tag : echo pulled success on retry"
-#
-#  run "$PWD"/hooks/command
-#
-#  assert_failure
-#  assert_output --partial "!!! :docker: Pull failed"
-#
-#  unstub docker
-#}
+@test "Pull image first before running BUILDKITE_COMMAND, failure on retries" {
+  export BUILDKITE_PLUGIN_DOCKER_ALWAYS_PULL=true
+	export BUILDKITE_PLUGIN_DOCKER_PULL_RETRIES=2
+
+  stub docker \
+    "pull image:tag" \
+    "pull image:tag" \
+    "run -t -i --rm --init --volume $PWD:/workdir --workdir /workdir --label com.buildkite.job-id=1-2-3-4 image:tag /bin/sh -e -c 'pwd' : echo ran command in docker"
+
+  run "$PWD"/hooks/command
+
+  assert_failure
+  assert_output --partial "Retrying 1 more times..."
+  assert_output --partial "pulled latest image on retry"
+  assert_output --partial "ran command in docker"
+
+  unstub docker
+}
 
 @test "Runs BUILDKITE_COMMAND with mount-buildkite-agent disabled specifically" {
   export BUILDKITE_PLUGIN_DOCKER_MOUNT_BUILDKITE_AGENT=false
