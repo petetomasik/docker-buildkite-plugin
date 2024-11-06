@@ -89,12 +89,12 @@ setup() {
 	export BUILDKITE_PLUGIN_DOCKER_COMPOSE_PULL_RETRIES=1
 
   stub docker \
-    "pull image:tag : pulled non-existent image"
+    "pull image:tag : echo pulled non-existent image"
 
   run "$PWD"/hooks/command
 
   assert_failure
-  assert_output --partial "Failed to pull image"
+  assert_output --partial "!!! :docker: Pull failed"
 
   unstub docker
 }
