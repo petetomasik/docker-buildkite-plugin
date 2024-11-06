@@ -91,15 +91,13 @@ setup() {
 
   stub docker \
     "pull image:tag" \
-    "pull image:tag" \
-    "run -t -i --rm --init --volume $PWD:/workdir --workdir /workdir --label com.buildkite.job-id=1-2-3-4 image:tag /bin/sh -e -c 'pwd' : echo ran command in docker"
+    "pull image:tag"
 
   run "$PWD"/hooks/command
 
   assert_failure
   assert_output --partial "Retrying 1 more times..."
-  assert_output --partial "pulled latest image on retry"
-  assert_output --partial "ran command in docker"
+  assert_output --partial "!!! :docker: Pull failed."
 
   unstub docker
 }
