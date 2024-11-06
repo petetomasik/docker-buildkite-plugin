@@ -9,12 +9,11 @@ function retry {
 
   until "$@"; do
     local retry_exit_status=$?
-    echo "Exited with retry_exit_status: $retry_exit_status"
+    echo "Exited with $retry_exit_status"
     if (( retries == "0" )); then
       return $retry_exit_status
     elif (( attempts == retries )); then
       echo "Failed $attempts retries"
-      echo "retry_exit_status: $retry_exit_status"
       return $retry_exit_status
     else
       echo "Retrying $((retries - attempts)) more times..."
