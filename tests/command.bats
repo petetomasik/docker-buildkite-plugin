@@ -71,7 +71,7 @@ setup() {
 	export BUILDKITE_PLUGIN_DOCKER_COMPOSE_PULL_RETRIES=1
 
   stub docker \
-    "pull image:tag : echo failed to pull latest image" \
+    "pull image:tag" \
     "pull image:tag : echo pulled latest image on retry"
 
   run "$PWD"/hooks/command
